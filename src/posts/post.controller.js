@@ -6,10 +6,17 @@ const getAllPosts = async (req, res) => {
     try {
         const posts = await Post.find().sort({ createdAt: -1 });
 
+        const postsWithComments = await Promise.all(
+            posts.map(async (post) => {
+                const comments = await Comment.find({ post: post._id }).sort({ createdAt: 1 });
+                return { ...post.toObject(), comments };
+            })
+        );
+
         res.json({
             message: 'Publicaciones obtenidas exitosamente',
-            total: posts.length,
-            posts,
+            total: postsWithComments.length,
+            posts: postsWithComments,
         });
     } catch (error) {
         console.error(error);
