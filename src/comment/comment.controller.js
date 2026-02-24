@@ -45,7 +45,7 @@ const updateComment = async (req, res) => {
         }
 
         //verificar que el usuario sea el autor del comentario
-        if (comment.authorId !== req.userId) {
+        if (comment.authorId.toString() !== req.userId.toString()) {
             return res.status(403).json({ message: 'No tienes permiso para editar este comentario' });
         }
 
@@ -57,7 +57,7 @@ const updateComment = async (req, res) => {
 
         res.json({
             message: 'Comentario actualizado exitosamente',
-            comment: updateComment,
+            comment: updatedComment,
         });
 
     } catch (error) {
